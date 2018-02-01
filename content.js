@@ -1,21 +1,23 @@
-/* Redirect button, by Wieland van Dijk [w.vandijk@nrc.nl], v1.0, July 2017 */
+/* Comment-out button, by Wieland van Dijk [w.vandijk@nrc.nl], v1.0, Feb 2018
+Injects a comment button in the editor toolbar at honk.nrc.nl */
 
-/* Injects a redirect button in the editor toolbar at honk.nrc.nl */
+
 var ed_toolbar = document.getElementById('ed_toolbar');
-var redir_button = document.createElement('input');
-redir_button.setAttribute('type', 'button');
-redir_button.setAttribute('id', 'qt_content_redir');
-redir_button.setAttribute('class', 'ed_button button button-small');
-redir_button.setAttribute('value', 'Redirect');
-redir_button.addEventListener('click', redirect);
-ed_toolbar.appendChild(redir_button);
+var comment_button = document.createElement('input');
+comment_button.setAttribute('type', 'button');
+comment_button.setAttribute('id', 'qt_content_comment');
+comment_button.setAttribute('class', 'ed_button button button-small');
+comment_button.setAttribute('value', 'Comment');
+comment_button.addEventListener('click', commentOut);
+ed_toolbar.appendChild(comment_button);
 
-/* Prompt for target of redirection, and replace article body with appropriate redirect code */
-function redirect() {
-	var url = prompt('Waar moet dit artikel naar doorverwijzen?');
-	if (url) {
-		var code = '<script>location.replace(\'' + url + '\')\; document.body.style.visibility = \'hidden\'\; </script><noscript>Dit artikel is te vinden op ' + '<a href=\"' + url + '\">' + url + '</a></noscript>';
-		var content = document.getElementById('content');
-		content.innerText = code;
-	}
+/* Comments out selected string */
+function commentOut() {
+	let textarea = document.getElementById('content');
+	let len = textarea.value.length;
+	let start = textarea.selectionStart;
+	let end = textarea.selectionEnd;
+	let sel = textarea.value.substring(start, end);
+	let comment = `<--// ${sel} //-->`;
+	textarea.value =  textarea.value.substring(0,start) + comment + textarea.value.substring(end,len);
 }
